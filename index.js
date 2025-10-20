@@ -4,8 +4,11 @@ import * as github from "@actions/github";
 try {
     const sha = core.getInput("sha");
     const name = core.getInput("name");
+    const token = core.getInput("token") || process.env.GITHUB_TOKEN;
 
-    const { data: check_run } = await github.rest.checks.create({
+    const octokit = github.getOctokit(token);
+
+    const { data: check_run } = await octokit.rest.checks.create({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         name: name,

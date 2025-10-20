@@ -16,6 +16,12 @@ inputs:
       The name of the check run.
     type: string
     required: true
+  token:
+    description: |
+      GitHub token for API access. Defaults to GITHUB_TOKEN.
+    type: string
+    required: false
+    default: ${{ github.token }}
 
 runs:
   using: 'node24'
