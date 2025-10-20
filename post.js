@@ -12,10 +12,10 @@ try {
         repo: github.context.repo.repo,
         check_run_id: check_run_id,
         status: 'completed',
-        conclusion: github.conclusion === 'success' ? 'success' : 'failure',
+        conclusion: github.context.conclusion === 'success' ? 'success' : 'failure',
         output: {
             title: 'completed...',
-            summary: `It is ${github.conclusion}`,
+            summary: `It is ${github.context.conclusion}`,
         }
     });
 } catch (error) {
