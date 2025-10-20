@@ -15,7 +15,7 @@ try {
         conclusion: github.context.conclusion === 'success' ? 'success' : 'failure',
         output: {
             title: 'completed...',
-            summary: `It is ${github.context.conclusion}\n\n## Context\n\`\`\`json\n${JSON.stringify(github.context, null, 2)}\n\`\`\``,
+            summary: `It is ${github.context.conclusion}\n\n## Context\n\`\`\`json\n${JSON.stringify(core, null, 2)}\n\`\`\``,
         }
     });
 } catch (error) {
