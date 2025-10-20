@@ -1,0 +1,23 @@
+# Copyright 2024 Chainguard, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+name: 'Check Run'
+description: |
+  This action write a check run status to an input SHA.
+
+inputs:
+  sha:
+    description: |
+      The commit sha to associate the check run with.
+    type: string
+    required: true
+  name:
+    description: |
+      The name of the check run.
+    type: string
+    required: true
+
+runs:
+  using: 'node24'
+  main: 'index.js'
+  post: 'post.js'
