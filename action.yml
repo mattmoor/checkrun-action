@@ -22,6 +22,12 @@ inputs:
     type: string
     required: false
     default: ${{ github.token }}
+  status:
+    description: |
+      The status of the check run.
+    type: string
+    required: false
+    default: ${{ job.status }}
 
 runs:
   using: 'node24'
