@@ -13,7 +13,7 @@ try {
         repo: github.context.repo.repo,
         check_run_id: check_run_id,
         status: 'completed',
-        conclusion: 'success',
+        conclusion: status === 'success' ? 'success' : 'failure',
         output: {
             title: 'completed...',
             summary: `Job completed with status: ${status}`,
