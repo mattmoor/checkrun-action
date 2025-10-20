@@ -7,15 +7,40 @@ try {
 
     const octokit = github.getOctokit(token);
 
+    // Get the current job from the workflow run to determine its status
+    const { data: { jobs } } = await octokit.rest.actions.listJobsForWorkflowRun({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        run_id: github.context.runId,
+    });
+
+    // Find the current job - it should still be "in_progress" when post runs
+    const currentJob = jobs.find(job =>
+        job.status === 'in_progress' || job.status === 'completed'
+    ) || jobs[0];
+
+    // Map job conclusion to check run conclusion
+    // If job is still in_progress, we assume success unless steps failed
+    let conclusion = 'success';
+    if (currentJob.conclusion) {
+        conclusion = currentJob.conclusion;
+    } else if (currentJob.steps) {
+        // Check if any steps failed
+        const failedStep = currentJob.steps.find(step => step.conclusion === 'failure');
+        if (failedStep) {
+            conclusion = 'failure';
+        }
+    }
+
     await octokit.rest.checks.update({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         check_run_id: check_run_id,
         status: 'completed',
-        conclusion: github.context.conclusion === 'success' ? 'success' : 'failure',
+        conclusion: conclusion,
         output: {
             title: 'completed...',
-            summary: `It is ${github.context.conclusion}\n\n## Context\n\`\`\`json\n${JSON.stringify(core, null, 2)}\n\`\`\``,
+            summary: `Job completed with status: ${conclusion}`,
         }
     });
 } catch (error) {
